@@ -1,31 +1,33 @@
-name: Build APK
+name: Criar APK
 
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
-  apk:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '17'
 
       - uses: android-actions/setup-android@v3
+        with:
+          accept-license: true
 
-      - name: Install Android SDK packages
+      - name: Instale os pacotes do SDK de Android
         run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.9'
+          gradle-version: '8.5'
 
-      - name: Build debug APK
+      - name: Criar APK de depuração
         run: gradle assembleDebug --no-daemon
 
       - uses: actions/upload-artifact@v4
